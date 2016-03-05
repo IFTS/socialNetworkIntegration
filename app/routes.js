@@ -11,7 +11,8 @@ module.exports = function(app, passport, fbgraph, Twitter, user) {
 
     app.get('/profile', isLoggedIn, function(req, res) {
         res.render('profile.ejs', {
-            user: req.user
+            user: req.user,
+            twitterFeed: []
         });
     });
 
@@ -69,7 +70,7 @@ module.exports = function(app, passport, fbgraph, Twitter, user) {
     // handle the callback after twitter has authenticated the user
     app.get('/auth/twitter/callback',
         passport.authenticate('twitter', {
-            successRedirect: '/profile',
+            successRedirect: '/get/twitter/timeline',
             failureRedirect: '/'
         }));
 
@@ -90,7 +91,7 @@ module.exports = function(app, passport, fbgraph, Twitter, user) {
 
     app.get('/connect/twitter/callback',
         passport.authorize('twitter', {
-            successRedirect: '/profile',
+            successRedirect: '/get/twitter/timeline',
             failureRedirect: '/'
         }));
 
@@ -103,7 +104,10 @@ module.exports = function(app, passport, fbgraph, Twitter, user) {
       });
       twitter.get('statuses/home_timeline', function(error, tweets, response){
         if (error) console.error(error);
-        res.send(tweets);
+        res.render('profile.ejs', {
+            user: req.user,
+            twitterFeed: tweets
+        });
       });
     });
 

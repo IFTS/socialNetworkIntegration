@@ -1,5 +1,5 @@
 "use strict";
-module.exports = function(app, passport) {
+module.exports = function(app, passport, fbgraph, Twitter, user) {
 
     // ----- Basic Routes
 
@@ -23,13 +23,15 @@ module.exports = function(app, passport) {
 
     // ----- Facebook Routes
 
-    app.get('/auth/facebook', passport.authenticate('facebook', { scope: 'email' }));
+    app.get('/auth/facebook', passport.authenticate('facebook', { scope: ['email','user_posts'] }));
+
     //When the facebook route confirms, we handle the re-direct here
     app.get('/auth/facebook/callback',
         passport.authenticate('facebook', {
             successRedirect: '/profile',
             failureRedirect: '/'
         }));
+
     app.get('/unlink/facebook', function(req, res) {
         let user = req.user;
         user.facebook.token = undefined;
@@ -42,7 +44,7 @@ module.exports = function(app, passport) {
     });
 
     app.get('/connect/facebook', passport.authorize('facebook', {
-        scope: 'email'
+        scope: ['email', 'user_posts']
     }));
 
     app.get('/connect/facebook/callback',
@@ -51,16 +53,26 @@ module.exports = function(app, passport) {
             failureRedirect: '/'
         }));
 
+    // app.get('/get/facebook/posts',isLoggedIn, (req, res) => {
+    //   fbgraph.setAccessToken(req.user.facebook.token);
+    //   fbgraph.get(''+req.user.id+'', (err, res) => {
+    //     console.log('RES: ',res);
+    //   });
+    //   res.redirect('/profile');
+    // });
+
 
     // ----- Twitter Routes
 
     app.get('/auth/twitter', passport.authenticate('twitter'));
+
     // handle the callback after twitter has authenticated the user
     app.get('/auth/twitter/callback',
         passport.authenticate('twitter', {
             successRedirect: '/profile',
             failureRedirect: '/'
         }));
+
     app.get('/unlink/twitter', function(req, res) {
         let user = req.user;
         user.twitter.token = undefined;
@@ -81,6 +93,19 @@ module.exports = function(app, passport) {
             successRedirect: '/profile',
             failureRedirect: '/'
         }));
+
+    app.get('/get/twitter/timeline', isLoggedIn, (req, res) => {
+      var twitter = new Twitter({
+        consumer_key: process.env.TwitterAppID,
+        consumer_secret: process.env.TwitterAppSecret,
+        access_token_key: req.user.twitter.token,
+        access_token_secret: req.user.twitter.tokenSecret
+      });
+      twitter.get('statuses/home_timeline', function(error, tweets, response){
+        if (error) console.error(error);
+        res.send(tweets);
+      });
+    });
 
 
     // ----- Instagram Routes

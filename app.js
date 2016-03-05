@@ -11,6 +11,8 @@ import session from 'express-session';
 import favicon from 'serve-favicon';
 import dotenv from 'dotenv';
 import mongoose from 'mongoose';
+import fbgraph from 'fbgraph';
+import Twitter from 'twitter';
 
 //Load the .env file from root directory.
 dotenv.load();
@@ -18,7 +20,6 @@ dotenv.load();
 const app  = express();
 //Port which the node server will run on.
 const port = process.env.PORT || 8080;
-
 //Connect to the database
 let configDB = require('./lib/dbconfig.js');
 mongoose.connect(configDB.url);
@@ -28,6 +29,8 @@ const configAuth = require('./lib/auth');
 let user = require('./app/models/user');
 // pass passport & for configuration
 require('./lib/passport')(passport, configAuth, user);
+// load Twitter
+
 // set up our express application
 app.use(morgan('dev')); // log every request to the console
 app.use(cookieParser()); // read cookies (needed for auth)
@@ -44,7 +47,7 @@ app.use(passport.session()); // persistent login sessions
 app.use(flash()); // use connect-flash for flash messages stored in session
 
 //Passing our Passport Information and Application Information to our routes
-require('./app/routes.js')(app, passport, user);
+require('./app/routes.js')(app, passport, fbgraph, Twitter, user);
 
 app.listen(port);
 console.log('Server connection established');

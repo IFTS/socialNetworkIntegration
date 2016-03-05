@@ -18,7 +18,16 @@
     </div>
 
     <div class="row">
-      <a href="/get/twitter/timeline" class="btn btn-primary">get twitter timeline</a>
+      <ul class="twitter-timeline"></ul>
+      <% if (twitterFeed) { %>
+        <% for(var i=0; i < twitterFeed.length; i++) { %>
+          <div class="col-sm-6">
+            <div class="well">
+              <p><%= twitterFeed[i].text %></p>
+            </div>
+          </div>
+        <% } %>
+      <% } %>
         <!-- FACEBOOK INFORMATION -->
         <div class="col-sm-6">
             <div class="well">
@@ -79,5 +88,7 @@
     </div>
 
 </div>
+
+  <script src="js/index.js"></script>
 </body>
 </html>

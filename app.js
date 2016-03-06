@@ -13,6 +13,7 @@ import dotenv from 'dotenv';
 import mongoose from 'mongoose';
 import fbgraph from 'fbgraph';
 import Twitter from 'twitter';
+var ig = require('instagram-node').instagram();
 
 //Load the .env file from root directory.
 dotenv.load();
@@ -47,7 +48,7 @@ app.use(passport.session()); // persistent login sessions
 app.use(flash()); // use connect-flash for flash messages stored in session
 
 //Passing our Passport Information and Application Information to our routes
-require('./app/routes.js')(app, passport, fbgraph, Twitter, user);
+require('./app/routes.js')(app, passport, fbgraph, Twitter, ig, user);
 
 app.listen(port);
 console.log('Server connection established');

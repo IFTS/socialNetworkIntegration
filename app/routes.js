@@ -1,5 +1,5 @@
 "use strict";
-module.exports = function(app, passport, fbgraph, Twitter, user) {
+module.exports = function(app, passport, fbgraph, Twitter, ig, user) {
 
     // ----- Basic Routes
 
@@ -36,14 +36,30 @@ module.exports = function(app, passport, fbgraph, Twitter, user) {
       }
 
       if (req.user.facebook) {
-        fbgraph.setAccessToken(req.user.facebook.token);
-        fbgraph.get('/'+req.user.facebook.id+'/feed', (err, res) => {
-          console.log('ERRR',err);
-          console.log('RESS', res);
+        var facebook = new Promise((resolve, reject) => {
+          fbgraph.setAccessToken(req.user.facebook.token);
+          fbgraph.get('/'+req.user.facebook.id+'/', (err, res) => {
+            // console.log('ERRR',err);
+            // console.log('RESS', res.data);
+            resolve();
+          });
         });
       }
 
-      Promise.all([twitter]).then(() => {
+      if (req.user.instagram) {
+        var instagram = new Promise((resolve, reject) => {
+          ig.use({
+             access_token: req.user.instagram.token
+           });
+          ig.use({
+            client_id: process.env.InstagramAppID,
+            client_secret: process.env.InstagramAppSecret
+          });
+          resolve(); // do IG query here
+        });
+      }
+
+      Promise.all([twitter, facebook]).then(() => {
         res.render('profile.ejs', {
             user: req.user,
             twitterFeed: twitterFeed

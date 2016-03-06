@@ -10,11 +10,49 @@ module.exports = function(app, passport, fbgraph, Twitter, user) {
     });
 
     app.get('/profile', isLoggedIn, function(req, res) {
+      var twitterFeed = [];
+      var facebookFeed = [];
+      var instaFeed = [];
+
+      if (req.user.twitter) {
+        var twitter = new Twitter({
+          consumer_key: process.env.TwitterAppID,
+          consumer_secret: process.env.TwitterAppSecret,
+          access_token_key: req.user.twitter.token,
+          access_token_secret: req.user.twitter.tokenSecret
+        });
+        var twitter = new Promise((resolve, reject) => {
+          twitter.get('statuses/home_timeline', function(error, tweets, response){
+            if (error) {
+              console.error(error);
+              resolve();
+            }
+            else {
+              twitterFeed = tweets;
+              resolve();
+            }
+          });
+        });
+      }
+
+      if (req.user.facebook) {
+        fbgraph.setAccessToken(req.user.facebook.token);
+        fbgraph.get('/'+req.user.facebook.id+'/feed', (err, res) => {
+          console.log('ERRR',err);
+          console.log('RESS', res);
+        });
+      }
+
+      Promise.all([twitter]).then(() => {
         res.render('profile.ejs', {
             user: req.user,
-            twitterFeed: []
+            twitterFeed: twitterFeed
         });
+      });
+
     });
+
+
 
     app.get('/logout', function(req, res) {
         req.logout();
@@ -70,7 +108,7 @@ module.exports = function(app, passport, fbgraph, Twitter, user) {
     // handle the callback after twitter has authenticated the user
     app.get('/auth/twitter/callback',
         passport.authenticate('twitter', {
-            successRedirect: '/get/twitter/timeline',
+            successRedirect: '/profile',
             failureRedirect: '/'
         }));
 
@@ -91,7 +129,7 @@ module.exports = function(app, passport, fbgraph, Twitter, user) {
 
     app.get('/connect/twitter/callback',
         passport.authorize('twitter', {
-            successRedirect: '/get/twitter/timeline',
+            successRedirect: '/profile',
             failureRedirect: '/'
         }));
 

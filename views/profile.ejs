@@ -28,6 +28,15 @@
           </div>
         <% } %>
       <% } %>
+      <% if (instaFeed) { %>
+        <% for(var i=0; i < instaFeed.length; i++) { %>
+          <div class="col-sm-6">
+            <div class="well">
+              <p><%= instaFeed[i].caption.text %></p>
+            </div>
+          </div>
+        <% } %>
+      <% } %>
         <!-- FACEBOOK INFORMATION -->
         <div class="col-sm-6">
             <div class="well">

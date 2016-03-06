@@ -13,7 +13,8 @@ import dotenv from 'dotenv';
 import mongoose from 'mongoose';
 import fbgraph from 'fbgraph';
 import Twitter from 'twitter';
-var ig = require('instagram-node').instagram();
+//Load in the Instagram Wrapper.
+let ig = require('instagram-node').instagram();
 
 //Load the .env file from root directory.
 dotenv.load();
@@ -29,7 +30,7 @@ const configAuth = require('./lib/auth');
 // load the mongoose User variables
 let user = require('./app/models/user');
 // pass passport & for configuration
-require('./lib/passport')(passport, configAuth, user);
+require('./lib/passport')(passport, configAuth, user, ig);
 // load Twitter
 
 // set up our express application

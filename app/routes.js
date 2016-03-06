@@ -1,5 +1,5 @@
 "use strict";
-module.exports = function(app, passport, fbgraph, Twitter, ig, user) {
+module.exports = function(app, passport, fbgraph, Twitter, ig) {
 
     // ----- Basic Routes
 
@@ -11,18 +11,19 @@ module.exports = function(app, passport, fbgraph, Twitter, ig, user) {
 
     app.get('/profile', isLoggedIn, function(req, res) {
       var twitterFeed = [];
-      var facebookFeed = [];
+      //var facebookFeed = [];
       var instaFeed = [];
+      var twitter, instagram /* facebook */;
 
       if (req.user.twitter) {
-        var twitter = new Twitter({
+        twitter = new Twitter({
           consumer_key: process.env.TwitterAppID,
           consumer_secret: process.env.TwitterAppSecret,
           access_token_key: req.user.twitter.token,
           access_token_secret: req.user.twitter.tokenSecret
         });
-        var twitter = new Promise((resolve, reject) => {
-          twitter.get('statuses/home_timeline', function(error, tweets, response){
+         twitter = new Promise((resolve) => {
+          twitter.get('statuses/home_timeline', function(error, tweets){
             if (error) {
               console.error(error);
               resolve();
@@ -35,34 +36,46 @@ module.exports = function(app, passport, fbgraph, Twitter, ig, user) {
         });
       }
 
-      if (req.user.facebook) {
-        var facebook = new Promise((resolve, reject) => {
+      /*if (req.user.facebook) {
+         facebook = new Promise((resolve) => {
           fbgraph.setAccessToken(req.user.facebook.token);
           fbgraph.get('/'+req.user.facebook.id+'/', (err, res) => {
-            // console.log('ERRR',err);
-            // console.log('RESS', res.data);
+            console.log('ERRR',err);
+            console.log('RESS', res.data);
             resolve();
           });
         });
-      }
+      }*/
 
       if (req.user.instagram) {
-        var instagram = new Promise((resolve, reject) => {
+        instagram = new Promise((resolve) => {
+          console.log("Access Token:" + req.user.instagram.token);
+          console.log("Client ID:" + process.env.InstagramAppID);
+          console.log("Client Secret:" + process.env.InstagramAppSecret);
           ig.use({
-             access_token: req.user.instagram.token
-           });
-          ig.use({
-            client_id: process.env.InstagramAppID,
-            client_secret: process.env.InstagramAppSecret
-          });
-          resolve(); // do IG query here
+              access_token: req.user.instagram.token,
+              client_id: process.env.InstagramAppID,
+              client_secret: process.env.InstagramAppSecret
+            });
+          ig.user_media_recent(req.user.instagram.id, function(err, medias) {
+            if (err) {
+              console.error(err);
+              resolve();
+            }
+            else {
+              instaFeed = medias;
+              resolve();
+            }
+            });
         });
       }
 
-      Promise.all([twitter, facebook]).then(() => {
+      Promise.all([twitter, instagram]).then(() => {
+        console.log(instaFeed);
         res.render('profile.ejs', {
             user: req.user,
-            twitterFeed: twitterFeed
+            twitterFeed: twitterFeed,
+            instaFeed: instaFeed
         });
       });
 
@@ -108,14 +121,6 @@ module.exports = function(app, passport, fbgraph, Twitter, ig, user) {
             failureRedirect: '/'
         }));
 
-    // app.get('/get/facebook/posts',isLoggedIn, (req, res) => {
-    //   fbgraph.setAccessToken(req.user.facebook.token);
-    //   fbgraph.get(''+req.user.id+'', (err, res) => {
-    //     console.log('RES: ',res);
-    //   });
-    //   res.redirect('/profile');
-    // });
-
 
     // ----- Twitter Routes
 
@@ -156,8 +161,10 @@ module.exports = function(app, passport, fbgraph, Twitter, ig, user) {
         access_token_key: req.user.twitter.token,
         access_token_secret: req.user.twitter.tokenSecret
       });
-      twitter.get('statuses/home_timeline', function(error, tweets, response){
-        if (error) console.error(error);
+      twitter.get('statuses/home_timeline', function(error, tweets){
+        if (error){
+          console.error(error);
+        }
         res.render('profile.ejs', {
             user: req.user,
             twitterFeed: tweets
@@ -195,7 +202,6 @@ module.exports = function(app, passport, fbgraph, Twitter, ig, user) {
             successRedirect: '/profile',
             failureRedirect: '/'
         }));
-
 
     // ------ Other Routes
     function isLoggedIn(req, res, next) {

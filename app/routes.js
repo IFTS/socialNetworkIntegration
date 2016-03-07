@@ -203,6 +203,14 @@ module.exports = function(app, passport, fbgraph, Twitter, ig) {
             failureRedirect: '/'
         }));
 
+    // ------ Google Routes
+    app.get('/auth/google', passport.authenticate('google', {scope: ['profile', 'email']}));
+
+    app.get('/auth/google/callback',
+        passport.authenticate('google', {
+          successRedirect: '/profile',
+          failureRedirect: '/'
+        }));
     // ------ Other Routes
     function isLoggedIn(req, res, next) {
         if (req.isAuthenticated()) {

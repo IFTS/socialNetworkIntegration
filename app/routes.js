@@ -10,10 +10,12 @@ module.exports = function(app, passport, fbgraph, Twitter, ig) {
     });
 
     app.get('/profile', isLoggedIn, function(req, res) {
+      console.log(req.user.google);
       var twitterFeed = [];
       //var facebookFeed = [];
       var instaFeed = [];
-      var twitter, instagram /* facebook */;
+      var googleFeed = [];
+      var twitter, instagram, google;
 
       if (req.user.twitter) {
         twitter = new Twitter({
@@ -30,22 +32,13 @@ module.exports = function(app, passport, fbgraph, Twitter, ig) {
             }
             else {
               twitterFeed = tweets;
+                console.log("Twitter Feed" + twitterFeed);
+              console.log(twitterFeed);
               resolve();
             }
           });
         });
       }
-
-      /*if (req.user.facebook) {
-         facebook = new Promise((resolve) => {
-          fbgraph.setAccessToken(req.user.facebook.token);
-          fbgraph.get('/'+req.user.facebook.id+'/', (err, res) => {
-            console.log('ERRR',err);
-            console.log('RESS', res.data);
-            resolve();
-          });
-        });
-      }*/
 
       if (req.user.instagram) {
         instagram = new Promise((resolve) => {
@@ -64,18 +57,28 @@ module.exports = function(app, passport, fbgraph, Twitter, ig) {
             }
             else {
               instaFeed = medias;
+                console.log("Insta Feed" + instaFeed);
+              console.log(instaFeed);
               resolve();
             }
             });
         });
       }
+      if (req.user.google) {
+        google = new Promise((resolve) => {
+          googleFeed = req.user.google;
+          console.log("Google Feed" + googleFeed);
+          resolve();
+        });
+      }
 
-      Promise.all([twitter, instagram]).then(() => {
+      Promise.all([twitter, instagram, google]).then(() => {
         console.log(instaFeed);
         res.render('profile.ejs', {
             user: req.user,
             twitterFeed: twitterFeed,
-            instaFeed: instaFeed
+            instaFeed: instaFeed,
+            googleFeed: googleFeed,
         });
       });
 
@@ -211,6 +214,30 @@ module.exports = function(app, passport, fbgraph, Twitter, ig) {
           successRedirect: '/profile',
           failureRedirect: '/'
         }));
+
+        app.get('/unlink/google', function(req, res) {
+            let user = req.user;
+            user.google.token = undefined;
+
+            user.save(function(err) {
+                if (err) {
+                    throw err;
+                }
+                res.redirect('/profile');
+            });
+        });
+
+        app.get('/connect/google', passport.authenticate('google', {scope: ['profile', 'email']}));
+
+        app.get('/connect/google/callback',
+            passport.authorize('google', {
+                successRedirect: '/profile',
+                failureRedirect: '/'
+            }));
+
+
+
+
     // ------ Other Routes
     function isLoggedIn(req, res, next) {
         if (req.isAuthenticated()) {

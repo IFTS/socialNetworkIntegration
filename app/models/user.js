@@ -30,7 +30,7 @@ var userSchema = mongoose.Schema({
     google           : {
         id           : String,
         token        : String,
-        name         : String,
+        displayName  : String,
         email        : String
     }
 });

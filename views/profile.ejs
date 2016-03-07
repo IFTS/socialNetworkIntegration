@@ -97,7 +97,7 @@
     </div>
 
     <div class="row">
-        <!-- GOOGLE INFORMATION -->
+        <!-- Google INFORMATION -->
         <div class="col-sm-6">
             <div class="well">
                 <h3 class="text-info"><span class="fa fa-google"></span> Google</h3>
@@ -105,11 +105,13 @@
                     <p>
                         <strong>id</strong>: <%= user.google.id %><br>
                         <strong>token</strong>: <%= user.google.token %><br>
-                        <strong>email</strong>: <%= user.google.email %><br>
-                        <strong>name</strong>: <%= user.google.name %>
+                        <strong>Email</strong>: <%= user.google.email %><br>
+                        <strong>Name</strong>: <%= user.google.displayName %>
                     </p>
-                    <a href="/unlink/instagram" class="btn btn-danger">Unlink</a>
-               <% }
+                    <a href="/unlink/google" class="btn btn-danger">Unlink</a>
+               <% } else { %>
+                   <a href="/connect/google" class="btn btn-danger">Connect Google</a>
+               <% } %>
             </div>
         </div>
     </div>

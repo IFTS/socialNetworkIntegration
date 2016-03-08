@@ -25,14 +25,14 @@ module.exports = function(app, passport, fbgraph, Twitter, ig) {
           access_token_secret: req.user.twitter.tokenSecret
         });
          twitter = new Promise((resolve) => {
-          twitter.get('statuses/home_timeline', function(error, tweets){
+          twitter.get('statuses/user_timeline', function(error, tweets){
             if (error) {
               console.error(error);
               resolve();
             }
             else {
               twitterFeed = tweets;
-                console.log("Twitter Feed" + twitterFeed);
+                console.log("Twitter Feed", twitterFeed);
               console.log(twitterFeed);
               resolve();
             }
@@ -57,7 +57,7 @@ module.exports = function(app, passport, fbgraph, Twitter, ig) {
             }
             else {
               instaFeed = medias;
-                console.log("Insta Feed" + instaFeed);
+                console.log("Insta Feed", instaFeed[1].images.standard_resolution);
               console.log(instaFeed);
               resolve();
             }
@@ -67,7 +67,7 @@ module.exports = function(app, passport, fbgraph, Twitter, ig) {
       if (req.user.google) {
         google = new Promise((resolve) => {
           googleFeed = req.user.google;
-          console.log("Google Feed" + googleFeed);
+          console.log("Google Feed", googleFeed);
           resolve();
         });
       }

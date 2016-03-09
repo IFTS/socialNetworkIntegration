@@ -19,23 +19,25 @@
 
     <div class="row">
       <ul class="twitter-timeline"></ul>
-      <% if (twitterFeed) { %>
-        <% for(var i=0; i < twitterFeed.length; i++) { %>
-          <div class="col-sm-6">
-            <div class="well">
-              <p><%= twitterFeed[i].text %></p>
+      <% if (merged) { %>
+        <% for(var i=0; i < merged.length; i++) { %>
+          <% if (merged[i].api == 'instagram') { %>
+            <div class="col-sm-6">
+              <div class="well">
+                <img src="<%= merged[i].images.standard_resolution.url %>" class="col-sm-12"></img>
+                <h2>Instagram</h2>
+                <p><%= merged[i].caption.text %></p>
+              </div>
             </div>
-          </div>
-        <% } %>
-      <% } %>
-      <% if (instaFeed) { %>
-        <% for(var i=0; i < instaFeed.length; i++) { %>
-          <div class="col-sm-6">
-            <div class="well">
-              <img src="<%= instaFeed[i].images.standard_resolution.url %>" class="col-sm-12"></img>
-              <p><%= instaFeed[i].caption.text %></p>
+          <% } %>
+          <% if (merged[i].api == 'twitter') { %>
+            <div class="col-sm-6">
+              <div class="well">
+                <h2>TWITTER</h2>
+                <p><%= merged[i].text %></p>
+              </div>
             </div>
-          </div>
+          <% } %>
         <% } %>
       <% } %>
         <!-- FACEBOOK INFORMATION -->

@@ -1,5 +1,5 @@
 "use strict";
-module.exports = function(app, passport, fbgraph, Twitter, ig) {
+module.exports = function(app, passport, fbgraph, Twitter, ig, moment) {
 
     // ----- Basic Routes
 
@@ -32,8 +32,6 @@ module.exports = function(app, passport, fbgraph, Twitter, ig) {
             }
             else {
               twitterFeed = tweets;
-                console.log("Twitter Feed", twitterFeed);
-              console.log(twitterFeed);
               resolve();
             }
           });
@@ -42,9 +40,6 @@ module.exports = function(app, passport, fbgraph, Twitter, ig) {
 
       if (req.user.instagram) {
         instagram = new Promise((resolve) => {
-          console.log("Access Token:" + req.user.instagram.token);
-          console.log("Client ID:" + process.env.InstagramAppID);
-          console.log("Client Secret:" + process.env.InstagramAppSecret);
           ig.use({
               access_token: req.user.instagram.token,
               client_id: process.env.InstagramAppID,
@@ -57,8 +52,6 @@ module.exports = function(app, passport, fbgraph, Twitter, ig) {
             }
             else {
               instaFeed = medias;
-                console.log("Insta Feed", instaFeed[1].images.standard_resolution);
-              console.log(instaFeed);
               resolve();
             }
             });
@@ -67,24 +60,67 @@ module.exports = function(app, passport, fbgraph, Twitter, ig) {
       if (req.user.google) {
         google = new Promise((resolve) => {
           googleFeed = req.user.google;
-          console.log("Google Feed", googleFeed);
           resolve();
         });
       }
 
       Promise.all([twitter, instagram, google]).then(() => {
-        console.log(instaFeed);
-        res.render('profile.ejs', {
-            user: req.user,
-            twitterFeed: twitterFeed,
-            instaFeed: instaFeed,
-            googleFeed: googleFeed,
-        });
+        for (var i = 0; i < twitterFeed.length; i++) {
+          twitterFeed[i]['time'] = moment.utc(twitterFeed[i].created_at).format();
+          twitterFeed[i]['api'] = 'twitter';
+          console.log('TWITTER: ',moment.utc(twitterFeed[i].created_at).format());
+        }
+        for (var j = 0; j < instaFeed.length; j++) {
+          instaFeed[j]['time'] = moment.unix(instaFeed[j].created_time).format();
+          instaFeed[j]['api'] = 'instagram';
+          console.log('INSTA',moment.unix(instaFeed[j].created_time).format());
+        }
+        console.log('i: '+ i + ' j: ' + j);
+        if (i == twitterFeed.length && j == instaFeed.length) {
+          mergeObjs(twitterFeed, instaFeed, [], 0, 0, function (result) {
+            console.log("RESULT: ", result);
+            res.render('profile.ejs', {
+                user: req.user,
+                merged: result
+                // twitterFeed: twitterFeed,
+                // instaFeed: instaFeed,
+                // googleFeed: googleFeed,
+            });
+          })
+        }
+        // res.render('profile.ejs', {
+        //     user: req.user,
+        //     twitterFeed: twitterFeed,
+        //     instaFeed: instaFeed,
+        //     googleFeed: googleFeed,
+        // });
       });
 
     });
 
+    function mergeObjs (a, b, c, numA, numB, callback) {
+      console.log(numA);
 
+      if (numA == a.length -1 && numB == b.length -1) {
+        callback(c);
+      }
+      else if (numA == a.length -1 && numB < b.length -1) {
+        c.push(b[numB]);
+        mergeObjs(a, b, c, numA, numB+1, callback);
+      }
+      else if (numB == b.length -1 && numA < A.length -1) {
+        c.push(a[numA]);
+        mergeObjs(a, b, c, numA+1, numB, callback);
+      }
+      else if (a[numA].time >= b[numB].time) {
+        c.push(a[numA]);
+        mergeObjs(a, b, c, numA+1, numB, callback);
+      }
+      else {
+        c.push(b[numB]);
+        mergeObjs(a, b, c, numA, numB+1, callback);
+      }
+    }
 
     app.get('/logout', function(req, res) {
         req.logout();

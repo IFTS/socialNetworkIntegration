@@ -13,6 +13,12 @@ import dotenv from 'dotenv';
 import mongoose from 'mongoose';
 import fbgraph from 'fbgraph';
 import Twitter from 'twitter';
+import google from 'googleapis';
+import moment from 'moment';
+var plus = google.plus('v1');
+var OAuth2 = google.auth.OAuth2;
+var oauth2Client = new OAuth2(process.env.GoogleAppID, process.env.GoogleAppSecret, './connect/google/callback');
+
 //Load in the Instagram Wrapper.
 let ig = require('instagram-node').instagram();
 
@@ -49,7 +55,7 @@ app.use(passport.session()); // persistent login sessions
 app.use(flash()); // use connect-flash for flash messages stored in session
 
 //Passing our Passport Information and Application Information to our routes
-require('./app/routes.js')(app, passport, fbgraph, Twitter, ig, user);
+require('./app/routes.js')(app, passport, fbgraph, Twitter, ig, moment);
 
 app.listen(port);
 console.log('Server connection established');

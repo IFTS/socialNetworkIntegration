@@ -88,6 +88,22 @@ module.exports = function(app, passport, fbgraph, Twitter, ig, moment) {
             });
           })
         }
+        else if (twitterFeed.length == 0 && instaFeed.length != 0) {
+          res.render('profile.ejs', {
+              user: req.user,
+              twitterFeed: twitterFeed,
+              instaFeed: instaFeed,
+              googleFeed: googleFeed,
+          });
+        }
+        else if (twitterFeed.length != 0 && instaFeed.length == 0) {
+          res.render('profile.ejs', {
+              user: req.user,
+              twitterFeed: twitterFeed,
+              instaFeed: instaFeed,
+              googleFeed: googleFeed,
+          });
+        }
         // res.render('profile.ejs', {
         //     user: req.user,
         //     twitterFeed: twitterFeed,

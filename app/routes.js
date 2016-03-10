@@ -125,14 +125,14 @@ module.exports = function(app, passport, fbgraph, Twitter, ig, moment) {
     function mergeObjs (a, b, c, numA, numB, callback) {
       console.log(numA);
 
-      if (numA == a.length -1 && numB == b.length -1) {
+      if (numA == a.length && numB == b.length) {
         callback(c);
       }
-      else if (numA == a.length -1 && numB < b.length -1) {
+      else if (numA == a.length && numB < b.length) {
         c.push(b[numB]);
         mergeObjs(a, b, c, numA, numB+1, callback);
       }
-      else if (numB == b.length -1 && numA < A.length -1) {
+      else if (numB == b.length && numA < A.length) {
         c.push(a[numA]);
         mergeObjs(a, b, c, numA+1, numB, callback);
       }

@@ -76,34 +76,42 @@ module.exports = function(app, passport, fbgraph, Twitter, ig, moment) {
           console.log('INSTA',moment.unix(instaFeed[j].created_time).format());
         }
         console.log('i: '+ i + ' j: ' + j);
+        console.log('insta: ', instaFeed.length);
         if (i == twitterFeed.length && j == instaFeed.length) {
-          mergeObjs(twitterFeed, instaFeed, [], 0, 0, function (result) {
-            console.log("RESULT: ", result);
+          if (instaFeed.length == 0 || twitterFeed.length == 0) {
             res.render('profile.ejs', {
                 user: req.user,
-                merged: result
-                // twitterFeed: twitterFeed,
-                // instaFeed: instaFeed,
-                // googleFeed: googleFeed,
+                twitterFeed: twitterFeed,
+                instaFeed: instaFeed,
+                googleFeed: googleFeed,
+                merged: []
             });
-          })
+          }
+          else {
+            mergeObjs(twitterFeed, instaFeed, [], 0, 0, function (result) {
+              res.render('profile.ejs', {
+                  user: req.user,
+                  merged: result
+              });
+            });
+          }
         }
-        else if (twitterFeed.length == 0 && instaFeed.length != 0) {
-          res.render('profile.ejs', {
-              user: req.user,
-              twitterFeed: twitterFeed,
-              instaFeed: instaFeed,
-              googleFeed: googleFeed,
-          });
-        }
-        else if (twitterFeed.length != 0 && instaFeed.length == 0) {
-          res.render('profile.ejs', {
-              user: req.user,
-              twitterFeed: twitterFeed,
-              instaFeed: instaFeed,
-              googleFeed: googleFeed,
-          });
-        }
+        // else if (twitterFeed.length == 0 && instaFeed.length != 0) {
+        //   res.render('profile.ejs', {
+        //       user: req.user,
+        //       twitterFeed: twitterFeed,
+        //       instaFeed: instaFeed,
+        //       googleFeed: googleFeed,
+        //   });
+        // }
+        // else if (twitterFeed.length != 0 && instaFeed.length == 0) {
+        //   res.render('profile.ejs', {
+        //       user: req.user,
+        //       twitterFeed: twitterFeed,
+        //       instaFeed: instaFeed,
+        //       googleFeed: googleFeed,
+        //   });
+        // }
         // res.render('profile.ejs', {
         //     user: req.user,
         //     twitterFeed: twitterFeed,

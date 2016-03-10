@@ -12,16 +12,6 @@ const createTwitterTimeline = (timeline) => {
   }
 };
 
-const load = () => {
-  console.log('dom loaded');
 
-  const twitterTimelineButton = document.querySelector('.btn-twitter-timeline');
-
-  twitterTimelineButton.addEventListener('click', (event) =>
-    fetch('http://google.com')
-      .then((result) => console.log(result))
-      .then(() => { createTwitterTimeline(['cool tweed 1', 'nice tweed 2']); });
-  );
-};
 
 document.addEventListener('DOMContentLoaded', load, false);

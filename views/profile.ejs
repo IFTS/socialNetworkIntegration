@@ -11,12 +11,90 @@
 </head>
 <body>
 <div class="container">
-
+<div class="row">
     <div class="page-header text-center">
         <h1><span class="fa fa-anchor"></span> Profile Page</h1>
         <a href="/logout" class="btn btn-default btn-sm">Logout</a>
     </div>
+  </div>
+</div>
 
+<div class='container'>
+  <div class="row">
+    <div class="col-md-3">
+        <div class="well">
+            <h3 class="text-primary"><span class="fa fa-facebook"></span> Facebook</h3>
+              <% if (user.facebook.token) { %>
+                <p>
+                    <strong>id</strong>: <%= user.facebook.id %><br>
+                    <strong>token</strong>: <%= user.facebook.token %><br>
+                    <strong>email</strong>: <%= user.facebook.email %><br>
+                    <strong>name</strong>: <%= user.facebook.name %>
+                </p>
+                 <a href="/unlink/facebook" class="btn btn-primary">Unlink</a>
+                 <% } else { %>
+                <a href="/connect/facebook" class="btn btn-primary">Connect Facebook</a>
+            <% } %>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="well">
+            <h3 class="text-info"><span class="fa fa-twitter"></span> Twitter</h3>
+           <% if (user.twitter.token) { %>
+                <p>
+                    <strong>id</strong>: <%= user.twitter.id %><br>
+                    <strong>token</strong>: <%= user.twitter.token %><br>
+                    <strong>username</strong>: <%= user.twitter.username %><br>
+                    <strong>displayName</strong>: <%= user.twitter.displayName %>
+                </p>
+                <a href="/unlink/twitter" class="btn btn-info">Unlink</a>
+           <% } else { %>
+               <a href="/connect/twitter" class="btn btn-info">Connect Twitter</a>
+           <% } %>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="well">
+            <h3 class="text-info"><span class="fa fa-instagram"></span> Instagram</h3>
+            <% if (user.instagram.token) { %>
+                <p>
+                    <strong>id</strong>: <%= user.instagram.id %><br>
+                    <strong>token</strong>: <%= user.instagram.token %><br>
+                    <strong>username</strong>: <%= user.instagram.username %><br>
+                    <strong>displayName</strong>: <%= user.instagram.displayName %>
+                </p>
+                <a href="/unlink/instagram" class="btn btn-danger">Unlink</a>
+           <% } else { %>
+               <a href="/connect/instagram" class="btn btn-danger">Connect Instagram</a>
+           <% } %>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="well">
+            <h3 class="text-info"><span class="fa fa-google"></span> Google</h3>
+            <% if (user.google.token) { %>
+                <p>
+                    <strong>id</strong>: <%= user.google.id %><br>
+                    <strong>token</strong>: <%= user.google.token %><br>
+                    <strong>Email</strong>: <%= user.google.email %><br>
+                    <strong>Name</strong>: <%= user.google.displayName %>
+                </p>
+                <a href="/unlink/google" class="btn btn-danger">Unlink</a>
+           <% } else { %>
+               <a href="/connect/google" class="btn btn-danger">Connect Google</a>
+           <% } %>
+        </div>
+    </div>
+</div>
+</div>
+<div class="container">
+<div class="row">
+    <div class="page-header text-center">
+        <h1><span class="fa fa-anchor"></span> Your Timeline</h1>
+    </div>
+  </div>
+</div>
+<div class='container'>
     <div class="row">
       <ul class="twitter-timeline"></ul>
       <% if (merged.length != 0) { %>
@@ -46,6 +124,8 @@
           <% for(var i=0; i < twitterFeed.length; i++) { %>
             <div class="col-sm-6">
               <div class="well">
+                <h2>TWITTER</h2>
+                <h3><%= twitterFeed[i].time %></h3>
                 <p><%= twitterFeed[i].text %></p>
               </div>
             </div>
@@ -56,91 +136,15 @@
             <div class="col-sm-6">
               <div class="well">
                 <img src="<%= instaFeed[i].images.standard_resolution.url %>" class="col-sm-12"></img>
+                <h2>Instagram</h2>
+                <h3><%= instaFeed[i].time %></h3>
                 <p><%= instaFeed[i].caption.text %></p>
               </div>
             </div>
           <% } %>
         <% } %>
       <% } %>
-        <!-- FACEBOOK INFORMATION -->
-        <div class="col-sm-6">
-            <div class="well">
-                <h3 class="text-primary"><span class="fa fa-facebook"></span> Facebook</h3>
-                  <% if (user.facebook.token) { %>
-                    <p>
-                        <strong>id</strong>: <%= user.facebook.id %><br>
-                        <strong>token</strong>: <%= user.facebook.token %><br>
-                        <strong>email</strong>: <%= user.facebook.email %><br>
-                        <strong>name</strong>: <%= user.facebook.name %>
-                    </p>
-                     <a href="/unlink/facebook" class="btn btn-primary">Unlink</a>
-                     <% } else { %>
-                    <a href="/connect/facebook" class="btn btn-primary">Connect Facebook</a>
-                <% } %>
-            </div>
-        </div>
-    </div>
-
-    <div class="row">
-        <!-- TWITTER INFORMATION -->
-        <div class="col-sm-6">
-            <div class="well">
-                <h3 class="text-info"><span class="fa fa-twitter"></span> Twitter</h3>
-               <% if (user.twitter.token) { %>
-                    <p>
-                        <strong>id</strong>: <%= user.twitter.id %><br>
-                        <strong>token</strong>: <%= user.twitter.token %><br>
-                        <strong>username</strong>: <%= user.twitter.username %><br>
-                        <strong>displayName</strong>: <%= user.twitter.displayName %>
-                    </p>
-                    <a href="/unlink/twitter" class="btn btn-info">Unlink</a>
-               <% } else { %>
-                   <a href="/connect/twitter" class="btn btn-info">Connect Twitter</a>
-               <% } %>
-            </div>
-        </div>
-    </div>
-
-    <div class="row">
-        <!-- INSTAGRAM INFORMATION -->
-        <div class="col-sm-6">
-            <div class="well">
-                <h3 class="text-info"><span class="fa fa-instagram"></span> Instagram</h3>
-                <% if (user.instagram.token) { %>
-                    <p>
-                        <strong>id</strong>: <%= user.instagram.id %><br>
-                        <strong>token</strong>: <%= user.instagram.token %><br>
-                        <strong>username</strong>: <%= user.instagram.username %><br>
-                        <strong>displayName</strong>: <%= user.instagram.displayName %>
-                    </p>
-                    <a href="/unlink/instagram" class="btn btn-danger">Unlink</a>
-               <% } else { %>
-                   <a href="/connect/instagram" class="btn btn-danger">Connect Instagram</a>
-               <% } %>
-            </div>
-        </div>
-    </div>
-
-    <div class="row">
-        <!-- Google INFORMATION -->
-        <div class="col-sm-6">
-            <div class="well">
-                <h3 class="text-info"><span class="fa fa-google"></span> Google</h3>
-                <% if (user.google.token) { %>
-                    <p>
-                        <strong>id</strong>: <%= user.google.id %><br>
-                        <strong>token</strong>: <%= user.google.token %><br>
-                        <strong>Email</strong>: <%= user.google.email %><br>
-                        <strong>Name</strong>: <%= user.google.displayName %>
-                    </p>
-                    <a href="/unlink/google" class="btn btn-danger">Unlink</a>
-               <% } else { %>
-                   <a href="/connect/google" class="btn btn-danger">Connect Google</a>
-               <% } %>
-            </div>
-        </div>
-    </div>
-
+</div>
 </div>
 
   <script src="js/index.js"></script>

@@ -1,3 +1,4 @@
+
 body {
   padding: 50px;
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
@@ -5,4 +6,22 @@ body {
 
 a {
   color: #00B7FF;
+}
+
+#myInput {
+  width:190px;
+  -webkit-transition:width 0.3s ease-in-out;
+}
+#myInput:focus {
+  width:100%;
+  -webkit-transition:width 0.5s ease-in-out;
+}
+
+input{
+   text-align:center;
+}
+
+.col-centered{
+    margin: 0 auto;
+    float: none;
 }

@@ -9,7 +9,7 @@ a {
 }
 
 #myInput {
-  width:190px;
+  width:250px;
   -webkit-transition:width 0.3s ease-in-out;
 }
 #myInput:focus {
@@ -22,6 +22,6 @@ input{
 }
 
 .col-centered{
-    margin: 0 auto;
     float: none;
+    margin: 0 auto;
 }

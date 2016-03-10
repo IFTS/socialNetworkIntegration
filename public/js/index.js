@@ -1,5 +1,7 @@
 "use strict";
 
+//  ------ IS THIS NEEDED
+/*
 const createTwitterTimeline = (timeline) => {
   const twitterTimelineList = document.querySelector('.twitter-timeline');
 
@@ -11,7 +13,11 @@ const createTwitterTimeline = (timeline) => {
     twitterTimelineList.appendChild(li);
   }
 };
-
-
-
 document.addEventListener('DOMContentLoaded', load, false);
+*/
+
+$("#goToPrefrences").click(function() {
+    $('html, body').animate({
+        scrollTop: $("#prefrences").offset().top
+    }, 2000);
+});

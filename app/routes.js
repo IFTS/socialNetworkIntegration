@@ -66,19 +66,21 @@ module.exports = function(app, passport, fbgraph, Twitter, ig, moment) {
 
       Promise.all([twitter, instagram, google]).then(() => {
         for (var i = 0; i < twitterFeed.length; i++) {
-          twitterFeed[i]['time'] = moment.utc(twitterFeed[i].created_at).format();
-          twitterFeed[i]['api'] = 'twitter';
+          twitterFeed[i].time = moment.utc(twitterFeed[i].created_at).format();
+          twitterFeed[i].api = 'twitter';
           console.log('TWITTER: ',moment.utc(twitterFeed[i].created_at).format());
         }
         for (var j = 0; j < instaFeed.length; j++) {
-          instaFeed[j]['time'] = moment.unix(instaFeed[j].created_time).format();
-          instaFeed[j]['api'] = 'instagram';
+          instaFeed[j].time = moment.unix(instaFeed[j].created_time).format();
+          instaFeed[j].api = 'instagram';
           console.log('INSTA',moment.unix(instaFeed[j].created_time).format());
         }
         console.log('i: '+ i + ' j: ' + j);
         console.log('insta: ', instaFeed.length);
-        if (i == twitterFeed.length && j == instaFeed.length) {
-          if (instaFeed.length == 0 || twitterFeed.length == 0) {
+
+
+        if (i === twitterFeed.length && j === instaFeed.length) {
+          if (instaFeed.length === 0 || twitterFeed.length === 0) {
             res.render('profile.ejs', {
                 user: req.user,
                 twitterFeed: twitterFeed,
@@ -89,6 +91,7 @@ module.exports = function(app, passport, fbgraph, Twitter, ig, moment) {
           }
           else {
             mergeObjs(twitterFeed, instaFeed, [], 0, 0, function (result) {
+              console.log(result);
               res.render('profile.ejs', {
                   user: req.user,
                   merged: result
@@ -125,14 +128,14 @@ module.exports = function(app, passport, fbgraph, Twitter, ig, moment) {
     function mergeObjs (a, b, c, numA, numB, callback) {
       console.log(numA);
 
-      if (numA == a.length && numB == b.length) {
+      if (numA === a.length && numB === b.length) {
         callback(c);
       }
-      else if (numA == a.length && numB < b.length) {
+      else if (numA === a.length && numB < b.length) {
         c.push(b[numB]);
         mergeObjs(a, b, c, numA, numB+1, callback);
       }
-      else if (numB == b.length && numA < A.length) {
+      else if (numB === b.length && numA < a.length) {
         c.push(a[numA]);
         mergeObjs(a, b, c, numA+1, numB, callback);
       }
@@ -150,7 +153,6 @@ module.exports = function(app, passport, fbgraph, Twitter, ig, moment) {
         req.logout();
         res.redirect('/');
     });
-
 
     // ----- Facebook Routes
 

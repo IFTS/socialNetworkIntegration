@@ -41,9 +41,11 @@
           <% if (merged[i].api == 'instagram') { %>
             <div class="col-sm-6">
               <div class="well">
-                <img src="<%= merged[i].images.standard_resolution.url %>" class="col-sm-12"></img>
-                <h2>Instagram</h2>
-                <h3><%= merged[i].time %></h3>
+                <div class="head">
+                  <h3 class="text-info col-sm-4"><span class="fa fa-instagram"></span> Instagram</h3>
+                  <h3 class="time"><%= merged[i].timeFormat %></h3>
+                </div>
+                <img src="<%= merged[i].images.standard_resolution.url %>" width="100%" class="col-sm-12 instagram-image"></img>
                 <p><%= merged[i].caption.text %></p>
               </div>
             </div>
@@ -51,8 +53,10 @@
           <% if (merged[i].api == 'twitter') { %>
             <div class="col-sm-6">
               <div class="well">
-                <h2>TWITTER</h2>
-                <h3><%= merged[i].time %></h3>
+                <div class="head">
+                  <h3 class="text-info col-sm-4"><span class="fa fa-twitter"></span> Twitter</h3>
+                  <h3 class="time"><%= merged[i].timeFormat %></h3>
+                </div>
                 <p><%= merged[i].text %></p>
               </div>
             </div>
@@ -63,8 +67,10 @@
           <% for(var i=0; i < twitterFeed.length; i++) { %>
             <div class="col-sm-6">
               <div class="well">
-                <h2>TWITTER</h2>
-                <h3><%= twitterFeed[i].time %></h3>
+                <div class="head">
+                  <h3 class="text-info col-sm-4"><span class="fa fa-twitter"></span> Twitter</h3>
+                  <h3 class="time"><%= twitterFeed[i].timeFormat %></h3>
+                </div>
                 <p><%= twitterFeed[i].text %></p>
               </div>
             </div>
@@ -74,9 +80,11 @@
           <% for(var i=0; i < instaFeed.length; i++) { %>
             <div class="col-sm-6">
               <div class="well">
-                <img src="<%= instaFeed[i].images.standard_resolution.url %>" class="col-sm-12"></img>
-                <h2>Instagram</h2>
-                <h3><%= instaFeed[i].time %></h3>
+                <div class="col-sm-12 head">
+                  <h3 class="text-info col-sm-4"><span class="fa fa-instagram"></span> Instagram</h3>
+                  <h3 class="time"><%= instaFeed[i].timeFormat %></h3>
+                </div>
+                <img src="<%= instaFeed[i].images.standard_resolution.url %>" width="100%" class="col-sm-12 instagram-image"></img>
                 <p><%= instaFeed[i].caption.text %></p>
               </div>
             </div>

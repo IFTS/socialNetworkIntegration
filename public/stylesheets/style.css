@@ -25,3 +25,13 @@ input{
     float: none;
     margin: 0 auto;
 }
+.head {
+  overflow: hidden;
+}
+.time {
+  float: right;
+  font-size: 1em;
+}
+.instagram-image {
+  margin-bottom: 10px;
+}

@@ -67,11 +67,13 @@ module.exports = function(app, passport, fbgraph, Twitter, ig, moment) {
       Promise.all([twitter, instagram, google]).then(() => {
         for (var i = 0; i < twitterFeed.length; i++) {
           twitterFeed[i].time = moment.utc(twitterFeed[i].created_at).format();
+          twitterFeed[i].timeFormat = moment.utc(twitterFeed[i].created_at).format('LLL');
           twitterFeed[i].api = 'twitter';
           console.log('TWITTER: ',moment.utc(twitterFeed[i].created_at).format());
         }
         for (var j = 0; j < instaFeed.length; j++) {
           instaFeed[j].time = moment.unix(instaFeed[j].created_time).format();
+          instaFeed[j].timeFormat = moment.unix(instaFeed[j].created_time).format('LLL');
           instaFeed[j].api = 'instagram';
           console.log('INSTA',moment.unix(instaFeed[j].created_time).format());
         }
@@ -91,7 +93,7 @@ module.exports = function(app, passport, fbgraph, Twitter, ig, moment) {
           }
           else {
             mergeObjs(twitterFeed, instaFeed, [], 0, 0, function (result) {
-              console.log(result);
+              // console.log(result);
               res.render('profile.ejs', {
                   user: req.user,
                   merged: result

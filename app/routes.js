@@ -10,7 +10,6 @@ module.exports = function(app, passport, fbgraph, Twitter, ig, moment) {
     });
 
     app.get('/profile', isLoggedIn, function(req, res) {
-      console.log(req.user.google);
       var twitterFeed = [];
       //var facebookFeed = [];
       var instaFeed = [];
@@ -69,17 +68,12 @@ module.exports = function(app, passport, fbgraph, Twitter, ig, moment) {
           twitterFeed[i].time = moment.utc(twitterFeed[i].created_at).format();
           twitterFeed[i].timeFormat = moment.utc(twitterFeed[i].created_at).format('LLL');
           twitterFeed[i].api = 'twitter';
-          console.log('TWITTER: ',moment.utc(twitterFeed[i].created_at).format());
         }
         for (var j = 0; j < instaFeed.length; j++) {
           instaFeed[j].time = moment.unix(instaFeed[j].created_time).format();
           instaFeed[j].timeFormat = moment.unix(instaFeed[j].created_time).format('LLL');
           instaFeed[j].api = 'instagram';
-          console.log('INSTA',moment.unix(instaFeed[j].created_time).format());
         }
-        console.log('i: '+ i + ' j: ' + j);
-        console.log('insta: ', instaFeed.length);
-
 
         if (i === twitterFeed.length && j === instaFeed.length) {
           if (instaFeed.length === 0 || twitterFeed.length === 0) {
@@ -93,10 +87,11 @@ module.exports = function(app, passport, fbgraph, Twitter, ig, moment) {
           }
           else {
             mergeObjs(twitterFeed, instaFeed, [], 0, 0, function (result) {
-              // console.log(result);
+            let resultStringified = JSON.stringify(result);
+            let resultParsed      = JSON.parse(resultStringified);
               res.render('profile.ejs', {
                   user: req.user,
-                  merged: result
+                  merged: resultParsed
               });
             });
           }
@@ -128,7 +123,6 @@ module.exports = function(app, passport, fbgraph, Twitter, ig, moment) {
     });
 
     function mergeObjs (a, b, c, numA, numB, callback) {
-      console.log(numA);
 
       if (numA === a.length && numB === b.length) {
         callback(c);

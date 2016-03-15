@@ -14,6 +14,13 @@ module.exports = function(app, passport, fbgraph, Twitter, ig, moment) {
         }); // load the login.ejs file
     });
 
+    app.post('/profileAfterSearch', function(req, res) {
+      res.render('profile.ejs', {
+          user: req.user,
+          merged: req.body
+      });
+    });
+
     app.get('/profile', isLoggedIn, function(req, res) {
         var twitterFeed = [];
         //var facebookFeed = [];

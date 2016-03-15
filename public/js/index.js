@@ -17,8 +17,9 @@ $.ajax({
     dataType: 'JSON'
 }).done(function(response) {
     searchFunction(response);
+    console.log(response);
 });
-
+/*
 function searchFunction(objToSearch) {
     $("#myInput").keyup(function() {
         console.log("were inside keyup");
@@ -27,4 +28,15 @@ function searchFunction(objToSearch) {
         search = JSON.search(objToSearch, `//*[contains(text, "${text}") or contains(caption, "${text}")]`);
         console.log(search);
     });
+
+}
+*/
+function searchFunction(objToSearch) {
+$("#searchForm").submit(function(event){
+    event.preventDefault();
+    let text = $('#myInput').val();
+    let search = '';
+    search = JSON.search(objToSearch, `//*[contains(text, "${text}") or contains(caption, "${text}")]`);
+    console.log(search);
+});
 }

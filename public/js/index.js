@@ -19,24 +19,24 @@ $.ajax({
     searchFunction(response);
     console.log(response);
 });
-/*
-function searchFunction(objToSearch) {
-    $("#myInput").keyup(function() {
-        console.log("were inside keyup");
-        let text = this.value;
-        let search = '';
-        search = JSON.search(objToSearch, `//*[contains(text, "${text}") or contains(caption, "${text}")]`);
-        console.log(search);
-    });
 
-}
-*/
 function searchFunction(objToSearch) {
 $("#searchForm").submit(function(event){
     event.preventDefault();
     let text = $('#myInput').val();
     let search = '';
-    search = JSON.search(objToSearch, `//*[contains(text, "${text}") or contains(caption, "${text}")]`);
-    console.log(search);
+    search = JSON.search(objToSearch, `//*[contains(caption, "${text}") or contains(text, "${text}")]`);
+    let stringifySearch = JSON.stringify(search);
+    $.post('/updateTimeline', {stringifySearch});
+
+    /*$.ajax({
+        type: 'POST',
+        data: JSON.stringify(search),
+        url: '/updateTimeline',
+        dataType: 'JSON',
+        contentType: "application/json; charset=utf-8"
+    }).done(function(response) {
+      console.log(response);
+});*/
 });
 }

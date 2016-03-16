@@ -14,6 +14,14 @@ module.exports = function(app, passport, fbgraph, Twitter, ig, moment) {
         }); // load the login.ejs file
     });
 
+    app.post('/updateTimeline', function(req, res){
+      const newFeed = req.body;
+      res.render('profile.ejs', {
+          user: req.user,
+          merged: newFeed
+      });
+    });
+
     app.post('/profileAfterSearch', function(req, res) {
       res.render('profile.ejs', {
           user: req.user,
@@ -99,6 +107,7 @@ module.exports = function(app, passport, fbgraph, Twitter, ig, moment) {
                         let resultParsed = JSON.parse(resultStringified);
                         //res.send(resultParsed);
                         if (Object.keys(req.body).length === 0) {
+                          //res.send(resultParsed);
                           res.render('profile.ejs', {
                               user: req.user,
                               merged: resultParsed

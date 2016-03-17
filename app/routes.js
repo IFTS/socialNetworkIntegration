@@ -23,9 +23,15 @@ module.exports = function(app, passport, fbgraph, Twitter, ig, moment) {
           resolve('');
       });
 
-        var twitterFeed = [];
-        //var facebookFeed = [];
-        var instaFeed = [];
+        //mocking data
+        var twitterFeed = [
+          {text:"Test tweet one", created_at: '2015-02-13T15:29:05+00:00'},
+          {text:"Tweet TWO", created_at: '2016-02-18T12:32:05+00:00'},
+          {text:"Twitter api is nice", created_at: '2016-01-03T22:48:05+00:00'},
+        ];
+        var instaFeed = [
+          {caption: {text:"Test instagram one"}, created_time: '1519901242', images: {standard_resolution: {url: 'http://clementwoodgundogs.com/wp-content/uploads/2013/02/Grahams-dogs-processed-22.jpg'}}}
+        ];
         var googleFeed = [];
         var twitter, instagram, google;
 
@@ -101,7 +107,7 @@ module.exports = function(app, passport, fbgraph, Twitter, ig, moment) {
                           var searchedArr = [];
                           var search = result.map(function (item) {
                             if (item.caption) {
-                              if (item.caption.text.indexOf(searchTerm) > -1) {
+                              if (item.caption.text.toLowerCase().indexOf(searchTerm.toLowerCase()) > -1) {
                                 searchedArr.push(item);
                                 return true;
                               }
@@ -109,7 +115,7 @@ module.exports = function(app, passport, fbgraph, Twitter, ig, moment) {
                                 return false
                               }
                             } else {
-                              if (item.text.indexOf(searchTerm) > -1) {
+                              if (item.text.toLowerCase().indexOf(searchTerm.toLowerCase()) > -1) {
                                 searchedArr.push(item);
                                 return true;
                               }

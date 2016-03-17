@@ -5,7 +5,3 @@ $("#goToPrefrences").click(function() {
         scrollTop: $("#prefrences").offset().top
     }, 2000);
 });
-
-let info = {
-    location: "client"
-};

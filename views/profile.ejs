@@ -30,13 +30,18 @@
     <div class="col-sm-12">
       <div class="input-group col-centered">
       <form method="get" id='searchForm' action="/profile">
-        <input type="text" name='search' class="form-control input-lg col-centered" id="myInput" placeholder="Search Here">
+        <input type="text" name='search' value="<%= searchTerm %>" class="form-control input-lg col-centered" id="myInput" placeholder="Search Here">
         <button type="submit" class="btn btn-warning btn-lg" id='searchFormButton'>Search</button>
       </form>
     </div>
   </div>
     </div>
 </div>
+
+<!-- if search is empty put something here -->
+       <% if (nothingReturned) { %>
+           <div id='center' class="alert alert-danger"><%= nothingReturned %></div>
+       <% } %>
 
 <div class='container'>
     <div class="row">

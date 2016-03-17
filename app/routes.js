@@ -80,7 +80,9 @@ module.exports = function(app, passport, fbgraph, Twitter, ig, moment) {
             });
         }
         Promise.all([twitter, instagram, google, searchTerm]).then((promiseVariables) => {
+          let nothingReturned;
           var searchTerm = promiseVariables[3];
+          console.log("Search Term", searchTerm);
             for (var i = 0; i < twitterFeed.length; i++) {
                 twitterFeed[i].time = moment.utc(twitterFeed[i].created_at).format();
                 twitterFeed[i].timeFormat = moment.utc(twitterFeed[i].created_at).format('LLL');
@@ -94,25 +96,29 @@ module.exports = function(app, passport, fbgraph, Twitter, ig, moment) {
 
             if (i === twitterFeed.length && j === instaFeed.length) {
                 if (instaFeed.length === 0 || twitterFeed.length === 0) {
+                  let nothingReturned;
                     res.render('profile.ejs', {
                         user: req.user,
                         twitterFeed: twitterFeed,
                         instaFeed: instaFeed,
+                        nothingReturned: nothingReturned,
+                        searchTerm: searchTerm,
                         googleFeed: googleFeed,
                         merged: []
                     });
                 } else {
                     mergeObjs(twitterFeed, instaFeed, [], 0, 0, function(result) {
-                        if (searchTerm != '') {
+                      console.log(searchTerm);
+                        if (searchTerm !== '') {
                           var searchedArr = [];
-                          var search = result.map(function (item) {
+                          const search = result.map(function (item) {
                             if (item.caption) {
                               if (item.caption.text.toLowerCase().indexOf(searchTerm.toLowerCase()) > -1) {
                                 searchedArr.push(item);
                                 return true;
                               }
                               else {
-                                return false
+                                return false;
                               }
                             } else {
                               if (item.text.toLowerCase().indexOf(searchTerm.toLowerCase()) > -1) {
@@ -123,10 +129,18 @@ module.exports = function(app, passport, fbgraph, Twitter, ig, moment) {
                                 return false;
                               }
                             }
-                          })
+                          });
+
+                          let nothingReturned;
+                          if(searchedArr.length < 1){
+                            nothingReturned = "Nothing Returned";
+                          }
+
                           res.render('profile.ejs', {
                               user: req.user,
                               merged: searchedArr,
+                              nothingReturned: nothingReturned,
+                              searchTerm: searchTerm,
                               twitterFeed: [],
                               instaFeed: [],
                               googleFeed: []
@@ -137,6 +151,8 @@ module.exports = function(app, passport, fbgraph, Twitter, ig, moment) {
                               user: req.user,
                               merged: result,
                               twitterFeed: [],
+                              nothingReturned: nothingReturned,
+                              searchTerm: searchTerm,
                               instaFeed: [],
                               googleFeed: []
                           });
@@ -145,7 +161,7 @@ module.exports = function(app, passport, fbgraph, Twitter, ig, moment) {
                 }
             }
         }).catch((e) => {
-          console.log('err: ', e)
+          console.log('err: ', e);
         });
 
     });

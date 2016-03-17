@@ -120,13 +120,19 @@ module.exports = function(app, passport, fbgraph, Twitter, ig, moment) {
                           })
                           res.render('profile.ejs', {
                               user: req.user,
-                              merged: searchedArr
+                              merged: searchedArr,
+                              twitterFeed: [],
+                              instaFeed: [],
+                              googleFeed: []
                           });
                         }
                         else {
                           res.render('profile.ejs', {
                               user: req.user,
-                              merged: result
+                              merged: result,
+                              twitterFeed: [],
+                              instaFeed: [],
+                              googleFeed: []
                           });
                         }
                     });

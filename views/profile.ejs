@@ -30,8 +30,8 @@
   <div class="row">
     <div class="col-sm-12">
       <div class="input-group col-centered">
-      <form method="post" id='searchForm'>
-        <input type="text" class="form-control input-lg col-centered" id="myInput" placeholder="Search Here">
+      <form method="get" id='searchForm' action="/profile">
+        <input type="text" name='search' class="form-control input-lg col-centered" id="myInput" placeholder="Search Here">
         <button type="submit" class="btn btn-warning btn-lg" id='searchFormButton'>Search</button>
       </form>
     </div>

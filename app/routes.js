@@ -14,22 +14,15 @@ module.exports = function(app, passport, fbgraph, Twitter, ig, moment) {
         }); // load the login.ejs file
     });
 
-    app.post('/updateTimeline', function(req, res){
-      const newFeed = req.body;
-      res.render('profile.ejs', {
-          user: req.user,
-          merged: newFeed
-      });
-    });
-
-    app.post('/profileAfterSearch', function(req, res) {
-      res.render('profile.ejs', {
-          user: req.user,
-          merged: req.body
-      });
-    });
-
     app.get('/profile', isLoggedIn, function(req, res) {
+
+      var searchTerm = new Promise((resolve) => {
+        if (req.query.search) {
+          resolve(req.query.search);
+        }
+          resolve('');
+      });
+
         var twitterFeed = [];
         //var facebookFeed = [];
         var instaFeed = [];
@@ -80,7 +73,8 @@ module.exports = function(app, passport, fbgraph, Twitter, ig, moment) {
                 resolve();
             });
         }
-        Promise.all([twitter, instagram, google]).then(() => {
+        Promise.all([twitter, instagram, google, searchTerm]).then((promiseVariables) => {
+          var searchTerm = promiseVariables[3];
             for (var i = 0; i < twitterFeed.length; i++) {
                 twitterFeed[i].time = moment.utc(twitterFeed[i].created_at).format();
                 twitterFeed[i].timeFormat = moment.utc(twitterFeed[i].created_at).format('LLL');
@@ -103,46 +97,43 @@ module.exports = function(app, passport, fbgraph, Twitter, ig, moment) {
                     });
                 } else {
                     mergeObjs(twitterFeed, instaFeed, [], 0, 0, function(result) {
-                        let resultStringified = JSON.stringify(result);
-                        let resultParsed = JSON.parse(resultStringified);
-                        //res.send(resultParsed);
-                        if (Object.keys(req.body).length === 0) {
-                          //res.send(resultParsed);
+                        if (searchTerm != '') {
+                          var searchedArr = [];
+                          var search = result.map(function (item) {
+                            if (item.caption) {
+                              if (item.caption.text.indexOf(searchTerm) > -1) {
+                                searchedArr.push(item);
+                                return true;
+                              }
+                              else {
+                                return false
+                              }
+                            } else {
+                              if (item.text.indexOf(searchTerm) > -1) {
+                                searchedArr.push(item);
+                                return true;
+                              }
+                              else {
+                                return false;
+                              }
+                            }
+                          })
                           res.render('profile.ejs', {
                               user: req.user,
-                              merged: resultParsed
+                              merged: searchedArr
                           });
-                        } else if(req.body.location === 'client'){
-                          res.send(resultParsed);
                         }
-                        else{
-                          res.send("Something's Wrong");
+                        else {
+                          res.render('profile.ejs', {
+                              user: req.user,
+                              merged: result
+                          });
                         }
                     });
                 }
             }
-            // else if (twitterFeed.length == 0 && instaFeed.length != 0) {
-            //   res.render('profile.ejs', {
-            //       user: req.user,
-            //       twitterFeed: twitterFeed,
-            //       instaFeed: instaFeed,
-            //       googleFeed: googleFeed,
-            //   });
-            // }
-            // else if (twitterFeed.length != 0 && instaFeed.length == 0) {
-            //   res.render('profile.ejs', {
-            //       user: req.user,
-            //       twitterFeed: twitterFeed,
-            //       instaFeed: instaFeed,
-            //       googleFeed: googleFeed,
-            //   });
-            // }
-            // res.render('profile.ejs', {
-            //     user: req.user,
-            //     twitterFeed: twitterFeed,
-            //     instaFeed: instaFeed,
-            //     googleFeed: googleFeed,
-            // });
+        }).catch((e) => {
+          console.log('err: ', e)
         });
 
     });

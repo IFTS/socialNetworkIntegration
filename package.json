@@ -2,6 +2,7 @@
   "name": "socialNetworkIntergration",
   "main": "index.js",
   "dependencies": {
+    "array-find": "^1.0.0",
     "babel-core": "^6.1.21",
     "bcrypt-nodejs": "latest",
     "body-parser": "~1.0.0",

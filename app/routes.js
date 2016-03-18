@@ -120,6 +120,14 @@ module.exports = function(app, passport, fbgraph, Twitter, ig, moment) {
                               else {
                                 return false;
                               }
+                            } else if (item.timeFormat) {
+                              if (item.timeFormat.toLowerCase().indexOf(searchTerm.toLowerCase()) > -1) {
+                                searchedArr.push(item);
+                                return true;
+                              }
+                              else {
+                                return false;
+                              }
                             } else {
                               if (item.text.toLowerCase().indexOf(searchTerm.toLowerCase()) > -1) {
                                 searchedArr.push(item);

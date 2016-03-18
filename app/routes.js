@@ -117,11 +117,7 @@ module.exports = function(app, passport, fbgraph, Twitter, ig, moment) {
                                 searchedArr.push(item);
                                 return true;
                               }
-                              else {
-                                return false;
-                              }
-                            } else if (item.timeFormat) {
-                              if (item.timeFormat.toLowerCase().indexOf(searchTerm.toLowerCase()) > -1) {
+                              else if (item.timeFormat.toLowerCase().indexOf(searchTerm.toLowerCase()) > -1) {
                                 searchedArr.push(item);
                                 return true;
                               }
@@ -130,6 +126,10 @@ module.exports = function(app, passport, fbgraph, Twitter, ig, moment) {
                               }
                             } else {
                               if (item.text.toLowerCase().indexOf(searchTerm.toLowerCase()) > -1) {
+                                searchedArr.push(item);
+                                return true;
+                              }
+                              else if (item.timeFormat.toLowerCase().indexOf(searchTerm.toLowerCase()) > -1) {
                                 searchedArr.push(item);
                                 return true;
                               }

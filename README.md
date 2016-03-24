@@ -9,17 +9,17 @@ This repo contains the following information:
 To install the application onto your machine follow the following links:
 1. `Git pull` 
 2. Create a `.env` file. This file needs to include the following information:
-⋅⋅1. Facebook App ID
-⋅⋅2. Facebook App Secret
-⋅⋅3. Twitter App ID
-⋅⋅4. Twitter App Secret
-⋅⋅5. Twtiter Access Token
-⋅⋅6. Twitter Token Secret
-⋅⋅7. Instagram App ID
-⋅⋅8. Instagram App Secret
-⋅⋅9. Google App ID
-⋅⋅10. Google App Secret
-⋅⋅11. Mongo Database URL (This project used MLab).
+  1. Facebook App ID
+  2. Facebook App Secret
+  3. Twitter App ID
+  4. Twitter App Secret
+  5. Twtiter Access Token
+  6. Twitter Token Secret
+  7. Instagram App ID
+  8. Instagram App Secret
+  9. Google App ID
+  10. Google App Secret
+  11. Mongo Database URL (This project used MLab).
 3. `npm install`
 4. `npm start`
 

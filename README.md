@@ -7,6 +7,7 @@ This repo contains the following information:
 # Install
 
 To install the application onto your machine follow the following links:
+
 1. `Git pull` 
 2. Create a `.env` file. This file needs to include the following information:
   1. Facebook App ID

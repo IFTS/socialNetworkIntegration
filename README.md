@@ -26,10 +26,6 @@ To install the application onto your machine follow the following links:
 
 _Using jshint, would recommemd installing the `linter-jshint` package from Atom. `apm install linter-jshint`_
 
-# Build
-
-If you ever update the schema you should run
-`npm run update-schema`
 
 # Run
 
